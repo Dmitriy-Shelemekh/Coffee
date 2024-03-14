@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="01" author="d.shelemekh">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="coffee"/>
+            </not>
+        </preConditions>
+
+        <createTable remarks="Coffee" tableName="coffee">
+            <column name="id" remarks="Идентификатор" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="coffee_pkey"/>
+            </column>
+
+            <column name="name" remarks="Название сорта кофе" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="create_date" remarks="Дата создания записи" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

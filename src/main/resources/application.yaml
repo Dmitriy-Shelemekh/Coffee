@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+spring:
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/local
+    username: admin
+    password: 1234
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/liquibase-changelog.xml
+    default-schema: coffee
