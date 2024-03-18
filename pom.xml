@@ -13,7 +13,7 @@
 
 	<groupId>com.example</groupId>
 	<artifactId>coffee</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>coffee</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -92,13 +92,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-testcontainers</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
+			<artifactId>postgresql</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

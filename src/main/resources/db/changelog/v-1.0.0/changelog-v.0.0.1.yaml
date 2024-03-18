@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - property:
+      name: "schemaDB"
+      value: "coffee"
+  - include:
+      file: classpath:/db/changelog/v-1.0.0/01-create_table-coffee.yaml
+  - include:
+      file: classpath:/db/changelog/v-1.0.0/02-insert_into-coffee.yaml

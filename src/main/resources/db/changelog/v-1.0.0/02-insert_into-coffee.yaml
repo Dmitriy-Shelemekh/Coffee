@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: d.shelemekh
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: coffee
+        - columnExists:
+            tableName: coffee
+            columnName: id
+        - columnExists:
+            tableName: coffee
+            columnName: name
+        - columnExists:
+            tableName: coffee
+            columnName: create_date
+      changes:
+        - sql:
+            sql: INSERT INTO coffee (id, name, create_date) VALUES (GEN_RANDOM_UUID(), 'Ethiopia', NOW())
+        - sql:
+            sql: INSERT INTO coffee (id, name, create_date) VALUES (GEN_RANDOM_UUID(), 'Brasilia', NOW())
+        - sql:
+            sql: INSERT INTO coffee (id, name, create_date) VALUES ('9ba5f1b2-fc3c-42aa-b4dd-d2ba1f1b4da5', 'Brasilia', '2024-03-15 16:53:49')
