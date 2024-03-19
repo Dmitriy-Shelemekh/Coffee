@@ -1,0 +1,7 @@
+CREATE SCHEMA IF NOT EXISTS coffee;
+
+CREATE TABLE IF NOT EXISTS coffee.coffee(
+    id UUID NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    create_date TIMESTAMP NOT NULL
+);
