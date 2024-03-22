@@ -15,10 +15,15 @@ class CoffeeController(
 ) {
 
     @GetMapping("/{coffeeId}")
-    suspend fun getCoffee(
+    fun getCoffee(
         @PathVariable coffeeId: UUID
     ): ResponseEntity<Coffee> = runBlocking {
         service.getCoffee(coffeeId)
+    }
+
+    @GetMapping("/all")
+    fun getAllCoffee(): ResponseEntity<List<Coffee>> = runBlocking {
+        service.getAllCoffee()
     }
 
     @PutMapping("/{coffeeId}")
@@ -30,7 +35,7 @@ class CoffeeController(
     }
 
     @PostMapping
-    suspend fun postCoffee(
+    fun postCoffee(
         @RequestBody dto: CoffeeDto
     ): ResponseEntity<Coffee> = runBlocking {
         service.postCoffee(dto)
