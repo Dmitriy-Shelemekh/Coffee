@@ -18,12 +18,12 @@ class CoffeeController(
     fun getCoffee(
         @PathVariable coffeeId: UUID
     ): ResponseEntity<Coffee> = runBlocking {
-        service.getCoffee(coffeeId)
+        service.get(coffeeId)
     }
 
     @GetMapping("/all")
     fun getAllCoffee(): ResponseEntity<List<Coffee>> = runBlocking {
-        service.getAllCoffee()
+        service.getAll()
     }
 
     @PutMapping("/{coffeeId}")
@@ -31,20 +31,20 @@ class CoffeeController(
         @PathVariable coffeeId: UUID,
         @RequestBody dto: CoffeeDto
     ): ResponseEntity<Coffee> = runBlocking {
-        service.putCoffee(coffeeId, dto)
+        service.saveOrUpdate(coffeeId, dto)
     }
 
     @PostMapping
     fun postCoffee(
         @RequestBody dto: CoffeeDto
     ): ResponseEntity<Coffee> = runBlocking {
-        service.postCoffee(dto)
+        service.save(dto)
     }
 
     @DeleteMapping("/{coffeeId}")
     suspend fun deleteCoffee(
         @PathVariable coffeeId: UUID
     ): ResponseEntity<Coffee> = runBlocking {
-        service.deleteCoffee(coffeeId)
+        service.delete(coffeeId)
     }
 }
