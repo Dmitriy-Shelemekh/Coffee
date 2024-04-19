@@ -1,19 +1,19 @@
 package com.example.coffee.controller
 
+import com.example.coffee.BaseIntegrationTest
 import com.example.coffee.model.dto.CoffeeDto
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
-import org.testcontainers.containers.BindMode
-import org.testcontainers.containers.PostgreSQLContainer
-import java.util.UUID
+import java.util.*
 
 @Transactional
 @SpringBootTest
@@ -21,33 +21,7 @@ import java.util.UUID
 @TestMethodOrder(OrderAnnotation::class)
 class CoffeeControllerTest(
     @Autowired val coffeeController: CoffeeController
-) {
-    companion object {
-        private val db = PostgreSQLContainer("postgres:15")
-            .withDatabaseName("test")
-            .withClasspathResourceMapping("/sql/create_table-coffee.sql", "/docker-entrypoint-initdb.d/", BindMode.READ_ONLY)
-
-        @BeforeAll
-        @JvmStatic
-        fun startDBContainer() {
-            db.start()
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun stopDBContainer() {
-            db.stop()
-        }
-
-        @DynamicPropertySource
-        @JvmStatic
-        fun registerDBContainer(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", db::getJdbcUrl)
-            registry.add("spring.datasource.username", db::getUsername)
-            registry.add("spring.datasource.password", db::getPassword)
-        }
-    }
-
+) : BaseIntegrationTest() {
     @Test
     @Order(1)
     fun `dbContainer is running`() {
