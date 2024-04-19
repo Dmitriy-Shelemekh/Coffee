@@ -4,23 +4,18 @@ import com.example.coffee.model.dto.CoffeeDto
 import com.example.coffee.model.entity.Coffee
 import com.example.coffee.model.mapper.CoffeeMapper
 import com.example.coffee.repository.CoffeeRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import kotlin.collections.List
-import kotlin.jvm.optionals.getOrElse
 
 interface CoffeeService {
-    suspend fun save(dto: CoffeeDto): ResponseEntity<Coffee>
-    suspend fun saveOrUpdate(coffeeId: UUID, dto: CoffeeDto): ResponseEntity<Coffee>
-    suspend fun get(coffeeId: UUID): ResponseEntity<Coffee>
-    suspend fun getAll(): ResponseEntity<List<Coffee>>
-    suspend fun delete(coffeeId: UUID): ResponseEntity<Coffee>
+    fun save(dto: CoffeeDto): Coffee
+    fun update(target: Coffee, dto: CoffeeDto): Coffee
+    fun saveOrUpdate(coffeeId: UUID, dto: CoffeeDto): Coffee
+    fun get(coffeeId: UUID): Optional<Coffee>
+    fun getAll(): List<Coffee>
+    fun delete(coffeeId: UUID)
 }
 
 @Service
@@ -30,52 +25,44 @@ class CoffeeServiceImpl(
 ) : CoffeeService {
 
     @Transactional
-    override suspend fun save(
+    override fun save(
         dto: CoffeeDto
-    ): ResponseEntity<Coffee> = coroutineScope {
-        val result = async { repository.save(mapper.toEntity(dto)) }
-        ResponseEntity<Coffee>(result.await(), HttpStatus.CREATED)
+    ): Coffee {
+        return repository.save(mapper.toEntity(dto))
     }
 
     @Transactional
-    override suspend fun saveOrUpdate(
+    override fun update(
+        target: Coffee, dto: CoffeeDto
+    ): Coffee {
+        val updated = mapper.update(target, dto)
+        return repository.save(updated)
+    }
+
+    @Transactional
+    override fun saveOrUpdate(
         coffeeId: UUID, dto: CoffeeDto
-    ): ResponseEntity<Coffee> = coroutineScope {
-        val result = async { repository.findById(coffeeId) }.await()
-        if (result.isPresent) update(result.get(), dto)
-        else save(dto)
-    }
-
-    @Transactional
-    suspend fun update(
-        coffee: Coffee, dto: CoffeeDto
-    ): ResponseEntity<Coffee> = coroutineScope {
-        val updated = mapper.update(coffee, dto)
-        val result = async { repository.save(updated) }
-        ResponseEntity<Coffee>(result.await(), HttpStatus.OK)
+    ): Coffee {
+        val result = repository.findById(coffeeId)
+        return if (result.isPresent) update(result.get(), dto) else save(dto)
     }
 
     @Transactional(readOnly = true)
-    override suspend fun get(
+    override fun get(
         coffeeId: UUID
-    ): ResponseEntity<Coffee> = coroutineScope {
-        val result = async { repository.findById(coffeeId) }
-        result.await()
-            .map { entity -> ResponseEntity<Coffee>(entity, HttpStatus.OK) }
-            .getOrElse { ResponseEntity<Coffee>(HttpStatus.NOT_FOUND) }
+    ): Optional<Coffee> {
+        return repository.findById(coffeeId)
     }
 
     @Transactional(readOnly = true)
-    override suspend fun getAll(): ResponseEntity<List<Coffee>> = coroutineScope {
-        val result = async { repository.findAll() }
-        ResponseEntity<List<Coffee>>(result.await(), HttpStatus.OK)
+    override fun getAll(): List<Coffee> {
+        return repository.findAll()
     }
 
     @Transactional
-    override suspend fun delete(
+    override fun delete(
         coffeeId: UUID
-    ): ResponseEntity<Coffee> = coroutineScope {
-        launch { repository.deleteById(coffeeId) }
-        ResponseEntity<Coffee>(HttpStatus.OK)
+    ) {
+        repository.deleteById(coffeeId)
     }
 }
