@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: coffee
   jpa:
     show-sql: true
   datasource:
@@ -12,3 +14,5 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/changelog.yaml
     default-schema: coffee
+  sleuth:
+    enabled: true

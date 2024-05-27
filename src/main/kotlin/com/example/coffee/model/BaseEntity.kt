@@ -1,10 +1,8 @@
 package com.example.coffee.model
 
-import jakarta.persistence.Id
-import jakarta.persistence.MappedSuperclass
+import org.springframework.data.annotation.Id
 import java.util.*
 
-@MappedSuperclass
 abstract class BaseEntity {
     @Id
     val id: UUID = UUID.randomUUID()

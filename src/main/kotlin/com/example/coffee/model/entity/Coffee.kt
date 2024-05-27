@@ -1,21 +1,21 @@
 package com.example.coffee.model.entity
 
-import com.example.coffee.model.BaseEntity
-import jakarta.annotation.Nonnull
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.util.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
 @Table(schema = "coffee", name = "coffee")
 class Coffee(
-
-    @Column(name = "name")
-    @Nonnull
+    @Column
     var name: String,
 
-    @Column(name = "create_date")
-    @Nonnull
+    @Column
     var createDate: LocalDateTime
-) : BaseEntity()
+) {
+    @Id
+    var id: UUID = UUID.randomUUID()
+}
