@@ -3,7 +3,7 @@ package com.example.coffee.controller
 import com.example.coffee.model.dto.CoffeeDto
 import com.example.coffee.model.entity.Coffee
 import com.example.coffee.service.CoffeeService
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -14,44 +14,38 @@ import kotlin.jvm.optionals.getOrElse
 class CoffeeController(
     private val service: CoffeeService
 ) {
-
     @GetMapping("/{coffeeId}")
     fun getCoffee(
         @PathVariable coffeeId: UUID
-    ): ResponseEntity<Coffee> {
-        return service.get(coffeeId)
-            .map { entity -> ResponseEntity<Coffee>(entity, HttpStatus.OK) }
-            .getOrElse { ResponseEntity<Coffee>(HttpStatus.NOT_FOUND) }
-    }
+    ): ResponseEntity<Coffee> = service
+        .get(coffeeId)
+        .map { entity -> ResponseEntity<Coffee>(entity, OK) }
+        .getOrElse { ResponseEntity.status(NOT_FOUND).build() }
 
     @GetMapping("/all")
-    fun getAllCoffee(): ResponseEntity<List<Coffee>> {
-        val coffee = service.getAll()
-        return ResponseEntity<List<Coffee>>(coffee, HttpStatus.OK)
-    }
+    fun getAllCoffee(): ResponseEntity<List<Coffee>> = service
+        .getAll()
+        .let { coffee -> ResponseEntity.status(OK).body(coffee) }
 
     @PutMapping("/{coffeeId}")
     suspend fun putCoffee(
         @PathVariable coffeeId: UUID,
-        @RequestBody dto: CoffeeDto
-    ): ResponseEntity<Coffee>  {
-        return service.get(coffeeId)
-            .map { target -> ResponseEntity<Coffee>(service.update(target, dto), HttpStatus.OK) }
-            .getOrElse { postCoffee(dto) }
-    }
+        @RequestBody newCoffee: CoffeeDto
+    ): ResponseEntity<Coffee> = service
+        .get(coffeeId)
+        .map { existedCoffee -> service.update(existedCoffee, newCoffee) }
+        .map { updatedCoffee -> ResponseEntity.status(OK).body(updatedCoffee) }
+        .getOrElse { postCoffee(newCoffee) }
 
     @PostMapping
     fun postCoffee(
-        @RequestBody dto: CoffeeDto
-    ): ResponseEntity<Coffee> {
-        val coffee = service.save(dto)
-        return ResponseEntity<Coffee>(coffee, HttpStatus.CREATED)
-    }
+        @RequestBody newCoffee: CoffeeDto
+    ): ResponseEntity<Coffee> = service
+        .save(newCoffee)
+        .let { coffee -> ResponseEntity.status(CREATED).body(coffee)}
 
     @DeleteMapping("/{coffeeId}")
     suspend fun deleteCoffee(
         @PathVariable coffeeId: UUID
-    ): ResponseEntity<Coffee> {
-        return ResponseEntity<Coffee>(HttpStatus.OK)
-    }
+    ): ResponseEntity<Coffee> = ResponseEntity.status(OK).build()
 }
