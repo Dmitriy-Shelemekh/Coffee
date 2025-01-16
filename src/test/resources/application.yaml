@@ -1,5 +1,3 @@
 spring:
-  datasource:
-    url: jdbc:tc:postgresql:15:///test
   liquibase:
     enabled: false

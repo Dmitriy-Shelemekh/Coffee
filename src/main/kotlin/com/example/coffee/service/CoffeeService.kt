@@ -10,11 +10,10 @@ import java.util.*
 import kotlin.collections.List
 
 interface CoffeeService {
-    fun save(dto: CoffeeDto): Coffee
-    fun update(target: Coffee, dto: CoffeeDto): Coffee
-    fun saveOrUpdate(coffeeId: UUID, dto: CoffeeDto): Coffee
     fun get(coffeeId: UUID): Optional<Coffee>
     fun getAll(): List<Coffee>
+    fun save(newCoffee: CoffeeDto): Coffee
+    fun update(target: Coffee, newCoffee: CoffeeDto): Coffee
     fun delete(coffeeId: UUID)
 }
 
@@ -26,43 +25,29 @@ class CoffeeServiceImpl(
 
     @Transactional
     override fun save(
-        dto: CoffeeDto
-    ): Coffee {
-        return repository.save(mapper.toEntity(dto))
-    }
+        newCoffee: CoffeeDto
+    ): Coffee = mapper
+        .toEntity(newCoffee)
+        .let(repository::save)
 
     @Transactional
     override fun update(
-        target: Coffee, dto: CoffeeDto
-    ): Coffee {
-        val updated = mapper.update(target, dto)
-        return repository.save(updated)
-    }
-
-    @Transactional
-    override fun saveOrUpdate(
-        coffeeId: UUID, dto: CoffeeDto
-    ): Coffee {
-        val result = repository.findById(coffeeId)
-        return if (result.isPresent) update(result.get(), dto) else save(dto)
-    }
+        target: Coffee,
+        newCoffee: CoffeeDto
+    ): Coffee = mapper
+        .update(target, newCoffee)
+        .let { updatedCoffee -> repository.save(updatedCoffee) }
 
     @Transactional(readOnly = true)
     override fun get(
         coffeeId: UUID
-    ): Optional<Coffee> {
-        return repository.findById(coffeeId)
-    }
+    ): Optional<Coffee> = repository.findById(coffeeId)
 
     @Transactional(readOnly = true)
-    override fun getAll(): List<Coffee> {
-        return repository.findAll()
-    }
+    override fun getAll(): List<Coffee> = repository.findAll()
 
     @Transactional
     override fun delete(
         coffeeId: UUID
-    ) {
-        repository.deleteById(coffeeId)
-    }
+    ): Unit = repository.deleteById(coffeeId)
 }

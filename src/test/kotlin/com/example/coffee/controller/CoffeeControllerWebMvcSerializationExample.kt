@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 @WebMvcTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CoffeeControllerWebMvcTest(
+class CoffeeControllerWebMvcSerializationExample(
     @Autowired val mockMvc: MockMvc,
     @Autowired val objectMapper: ObjectMapper
 ) {

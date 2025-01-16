@@ -10,7 +10,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(schema = "coffee", name = "coffee")
 class Coffee(
-
     @Column(name = "name")
     @Nonnull
     var name: String,

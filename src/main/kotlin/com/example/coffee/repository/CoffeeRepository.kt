@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface CoffeeRepository : JpaRepository<Coffee, UUID> {
-    fun save(coffee: Coffee): Coffee
-}
+interface CoffeeRepository : JpaRepository<Coffee, UUID>
