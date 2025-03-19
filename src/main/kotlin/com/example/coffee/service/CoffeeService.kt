@@ -1,64 +1,36 @@
 package com.example.coffee.service
 
-import com.example.coffee.model.dto.CoffeeDto
 import com.example.coffee.model.entity.Coffee
-import com.example.coffee.model.mapper.CoffeeMapper
-import com.example.coffee.repository.CoffeeRepository
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import kotlin.collections.List
-import kotlin.jvm.optionals.getOrElse
+import com.example.coffee.model.entity.toCoffee
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.time.LocalDateTime
+import java.util.UUID
 
-interface CoffeeService {
-    fun save(newCoffee: CoffeeDto): Coffee
-    fun update(target: Coffee, newCoffee: CoffeeDto): Coffee
-    fun saveOrUpdate(coffeeId: UUID, newCoffee: CoffeeDto): Coffee
-    fun get(coffeeId: UUID): Optional<Coffee>
-    fun getAll(): List<Coffee>
-    fun delete(coffeeId: UUID)
-}
+class CoffeeService(private val connection: Connection) {
+    fun createSchema() = connection.createStatement().execute("CREATE SCHEMA IF NOT EXISTS coffee")
 
-@Service
-class CoffeeServiceImpl(
-    private val repository: CoffeeRepository,
-    private val mapper: CoffeeMapper
-) : CoffeeService {
+    fun createTable() = connection.createStatement().execute("""
+        CREATE TABLE IF NOT EXISTS coffee.coffee (
+            id UUID NOT NULL PRIMARY KEY, 
+            name VARCHAR(255) NOT NULL, 
+            create_date TIMESTAMP NOT NULL) 
+        """.trimIndent()
+    )
 
-    @Transactional
-    override fun save(
-        newCoffee: CoffeeDto
-    ): Coffee = mapper
-        .toEntity(newCoffee)
-        .let(repository::save)
+    fun insertCoffee(name: String): Coffee =
+        connection
+            .prepareStatement("INSERT INTO coffee.coffee(id, name, create_date) VALUES (?, ?, ?) RETURNING id, name, create_date")
+            .apply { setObject(1, UUID.randomUUID()) }
+            .apply { setString(2, name) }
+            .apply { setObject(3, LocalDateTime.now()) }
+            .let(PreparedStatement::executeQuery)
+            .toCoffee()
 
-    @Transactional
-    override fun update(
-        target: Coffee,
-        newCoffee: CoffeeDto
-    ): Coffee = mapper
-        .update(target, newCoffee)
-        .let(repository::save)
-
-    @Transactional
-    override fun saveOrUpdate(
-        coffeeId: UUID,
-        newCoffee: CoffeeDto
-    ): Coffee = repository
-        .findById(coffeeId)
-        .map { existedCoffee -> update(existedCoffee, newCoffee) }
-        .getOrElse { save(newCoffee) }
-
-    @Transactional(readOnly = true)
-    override fun get(
-        coffeeId: UUID
-    ): Optional<Coffee> = repository.findById(coffeeId)
-
-    @Transactional(readOnly = true)
-    override fun getAll(): List<Coffee> = repository.findAll()
-
-    @Transactional
-    override fun delete(
-        coffeeId: UUID
-    ): Unit = repository.deleteById(coffeeId)
+    fun getCoffee(id: UUID): Coffee =
+        connection
+            .prepareStatement("SELECT * FROM coffee.coffee WHERE coffee.coffee.id = ?")
+            .apply { setObject(1, id) }
+            .let(PreparedStatement::executeQuery)
+            .toCoffee()
 }

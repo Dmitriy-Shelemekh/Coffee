@@ -15,48 +15,24 @@
 	<artifactId>coffee</artifactId>
 	<version>1.0.0</version>
 	<name>coffee</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Demo project for JDBC</description>
 
 	<properties>
 		<java.version>17</java.version>
 		<kotlin.version>1.8.22</kotlin.version>
-		<mapstruct.version>1.5.5.Final</mapstruct.version>
-		<liquibase.version>4.26.0</liquibase.version>
 		<postgres.version>42.7.2</postgres.version>
-		<coroutines.version>1.8.0</coroutines.version>
 		<maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
 		<!--Data Base-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgres.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-			<version>${liquibase.version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+		<!--Kotlin-->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
@@ -64,25 +40,6 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
-
-		<!--Coroutines-->
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>${coroutines.version}</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-reactor</artifactId>
-			<version>${coroutines.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 
 		<!--Testing-->
@@ -107,11 +64,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>${liquibase.version}</version>
-			</plugin>
-			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<version>${kotlin.version}</version>
@@ -121,36 +73,18 @@
 						<goals>
 							<goal>kapt</goal>
 						</goals>
-						<configuration>
-							<annotationProcessorPaths>
-								<annotationProcessorPath>
-									<groupId>org.mapstruct</groupId>
-									<artifactId>mapstruct-processor</artifactId>
-									<version>${mapstruct.version}</version>
-								</annotationProcessorPath>
-							</annotationProcessorPaths>
-						</configuration>
 					</execution>
 				</executions>
 				<configuration>
 					<args>
 						<arg>-Xjsr305=strict</arg>
 					</args>
-					<compilerPlugins>
-						<plugin>spring</plugin>
-						<plugin>jpa</plugin>
-					</compilerPlugins>
 				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-allopen</artifactId>
 						<version>${kotlin.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.mapstruct</groupId>
-						<artifactId>mapstruct-processor</artifactId>
-						<version>${mapstruct.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
@@ -164,12 +98,10 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<executions>
-					<!-- Replacing default-compile as it is treated specially by maven -->
 					<execution>
 						<id>default-compile</id>
 						<phase>none</phase>
 					</execution>
-					<!-- Replacing default-testCompile as it is treated specially by maven -->
 					<execution>
 						<id>default-testCompile</id>
 						<phase>none</phase>
