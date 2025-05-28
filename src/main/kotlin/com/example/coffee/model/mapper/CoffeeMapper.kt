@@ -18,6 +18,7 @@ abstract class CoffeeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "dto.name")
     @Mapping(target = "createDate", expression = "java(getDate(dto.getCreateDate()))")
+    @Mapping(target = "region", source = "dto.region")
     abstract fun toEntity(dto: CoffeeDto): Coffee
 
     fun getDate(createDate: LocalDateTime?): LocalDateTime = createDate ?: LocalDateTime.now()

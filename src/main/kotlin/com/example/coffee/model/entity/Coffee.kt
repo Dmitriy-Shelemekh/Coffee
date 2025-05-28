@@ -10,12 +10,17 @@ import java.time.LocalDateTime
 @Entity
 @Table(schema = "coffee", name = "coffee")
 class Coffee(
-
     @Column(name = "name")
     @Nonnull
     var name: String,
 
     @Column(name = "create_date")
     @Nonnull
-    var createDate: LocalDateTime
-) : BaseEntity()
+    var createDate: LocalDateTime,
+
+    @Column(name = "region")
+    @Nonnull
+    var region: Region
+) : BaseEntity() {
+    enum class Region { COLUMBIA, ETHIOPIA, BRASILIA }
+}

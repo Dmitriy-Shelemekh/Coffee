@@ -29,8 +29,8 @@ class CoffeeControllerWebMvcTest(
     fun `Given twoCoffee When getAll Then successResponse`() {
         //given
         val all = listOf(
-            Coffee(name = "name_1", createDate = LocalDateTime.now()),
-            Coffee(name = "name_2", createDate = LocalDateTime.now())
+            Coffee(name = "name_1", createDate = LocalDateTime.now(), region = Coffee.Region.BRASILIA),
+            Coffee(name = "name_2", createDate = LocalDateTime.now(), region = Coffee.Region.BRASILIA)
         )
 
         BDDMockito
