@@ -31,7 +31,7 @@ class CoffeeController(
     }
 
     @PutMapping("/{coffeeId}")
-    suspend fun putCoffee(
+    fun putCoffee(
         @PathVariable coffeeId: UUID,
         @RequestBody dto: CoffeeDto
     ): ResponseEntity<Coffee>  {
@@ -49,7 +49,7 @@ class CoffeeController(
     }
 
     @DeleteMapping("/{coffeeId}")
-    suspend fun deleteCoffee(
+    fun deleteCoffee(
         @PathVariable coffeeId: UUID
     ): ResponseEntity<Coffee> {
         return ResponseEntity<Coffee>(HttpStatus.OK)

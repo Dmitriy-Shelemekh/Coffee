@@ -15,7 +15,9 @@ abstract class BaseIntegrationTest {
     companion object {
         val db: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:15")
             .withDatabaseName("test")
-            .withClasspathResourceMapping("/sql/create_table-coffee.sql", "/docker-entrypoint-initdb.d/", BindMode.READ_ONLY)
+            .withUsername("postgres")
+            .withPassword("1234")
+            .withClasspathResourceMapping("/sql/create_schema-coffee.sql", "/docker-entrypoint-initdb.d/", BindMode.READ_ONLY)
 
         @BeforeAll
         @JvmStatic

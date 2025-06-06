@@ -1,8 +1,9 @@
 package com.example.coffee.service
 
 import com.example.coffee.model.dto.CoffeeDto
+import com.example.coffee.model.dto.toEntity
+import com.example.coffee.model.dto.update
 import com.example.coffee.model.entity.Coffee
-import com.example.coffee.model.mapper.CoffeeMapper
 import com.example.coffee.repository.CoffeeRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,49 +21,37 @@ interface CoffeeService {
 
 @Service
 class CoffeeServiceImpl(
-    private val repository: CoffeeRepository,
-    private val mapper: CoffeeMapper
+    private val repository: CoffeeRepository
 ) : CoffeeService {
 
     @Transactional
     override fun save(
         dto: CoffeeDto
-    ): Coffee {
-        return repository.save(mapper.toEntity(dto))
-    }
+    ): Coffee = dto.toEntity().run(repository::save)
 
     @Transactional
     override fun update(
         target: Coffee, dto: CoffeeDto
-    ): Coffee {
-        val updated = mapper.update(target, dto)
-        return repository.save(updated)
-    }
+    ): Coffee = target.update(dto).run(repository::save)
 
     @Transactional
     override fun saveOrUpdate(
         coffeeId: UUID, dto: CoffeeDto
-    ): Coffee {
-        val result = repository.findById(coffeeId)
-        return if (result.isPresent) update(result.get(), dto) else save(dto)
-    }
+    ): Coffee = repository
+        .findById(coffeeId)
+        .map { target -> update(target, dto) }
+        .orElseGet { save(dto) }
 
     @Transactional(readOnly = true)
     override fun get(
         coffeeId: UUID
-    ): Optional<Coffee> {
-        return repository.findById(coffeeId)
-    }
+    ): Optional<Coffee> = repository.findById(coffeeId)
 
     @Transactional(readOnly = true)
-    override fun getAll(): List<Coffee> {
-        return repository.findAll()
-    }
+    override fun getAll(): List<Coffee> = repository.findAll()
 
     @Transactional
     override fun delete(
         coffeeId: UUID
-    ) {
-        repository.deleteById(coffeeId)
-    }
+    ): Unit = repository.deleteById(coffeeId)
 }

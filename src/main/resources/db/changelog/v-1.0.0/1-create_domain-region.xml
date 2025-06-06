@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="1" author="shelemekh_dd">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM pg_catalog.pg_type WHERE typname = 'region' AND typtype = 'd'
+            </sqlCheck>
+        </preConditions>
+
+        <sql>
+            CREATE DOMAIN region AS VARCHAR(20) CHECK (VALUE IN ('COLUMBIA', 'ETHIOPIA', 'BRASILIA'));
+        </sql>
+
+        <rollback>
+            <sql>
+                DROP DOMAIN IF EXISTS region;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
