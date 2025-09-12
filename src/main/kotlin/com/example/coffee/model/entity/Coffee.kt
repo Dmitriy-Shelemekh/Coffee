@@ -14,7 +14,7 @@ class Coffee(
 
     @Column(name = "create_date")
     @Nonnull
-    var createDate: LocalDateTime? = LocalDateTime.now(),
+    var createDate: LocalDateTime = LocalDateTime.now(),
 
     @Enumerated(EnumType.STRING)
     @Column(name = "region")

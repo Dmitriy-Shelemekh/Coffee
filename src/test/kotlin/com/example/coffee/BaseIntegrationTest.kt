@@ -21,15 +21,11 @@ abstract class BaseIntegrationTest {
 
         @BeforeAll
         @JvmStatic
-        fun setUp() {
-            db.start()
-        }
+        fun setUp() = db.start()
 
         @AfterAll
         @JvmStatic
-        fun tearDown() {
-            db.stop()
-        }
+        fun tearDown() = db.stop()
 
         @DynamicPropertySource
         @JvmStatic
