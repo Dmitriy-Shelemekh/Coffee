@@ -52,6 +52,7 @@ class CoffeeController(
     fun deleteCoffee(
         @PathVariable coffeeId: UUID
     ): ResponseEntity<Coffee> {
+        service.delete(coffeeId)
         return ResponseEntity<Coffee>(HttpStatus.OK)
     }
 }

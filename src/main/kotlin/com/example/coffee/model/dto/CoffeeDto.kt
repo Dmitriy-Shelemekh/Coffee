@@ -9,5 +9,9 @@ data class CoffeeDto(
     var region: Coffee.Region
 )
 
-fun Coffee.update(dto: CoffeeDto): Coffee = apply { name = dto.name }
+fun Coffee.update(dto: CoffeeDto): Coffee = apply {
+    name = dto.name
+    region = dto.region
+}
+
 fun CoffeeDto.toEntity(): Coffee = Coffee(name = name, createDate = createDate, region = region)
