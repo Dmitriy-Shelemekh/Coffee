@@ -2,11 +2,13 @@ package com.example.coffee
 
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Profile
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.PostgreSQLContainer
 
+@Profile("integration")
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseIntegrationTest {
