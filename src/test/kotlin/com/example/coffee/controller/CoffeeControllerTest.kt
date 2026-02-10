@@ -9,13 +9,11 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Profile("integration")
 @Transactional
 @Sql("/sql/insert_into-coffee.sql")
 @TestMethodOrder(OrderAnnotation::class)
